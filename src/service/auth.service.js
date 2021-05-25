@@ -5,8 +5,24 @@ const authService = axios.create({
   baseURL: `${CONSTS.SERVER_URL}/auth`,
 });
 
+function dealSuccess(response) {
+  return {
+    status: true,
+    data: response.data,
+  };
+}
+
+function dealError(err) {
+  console.log("err:", err.response);
+  return {
+    status: false,
+    message: err?.response?.data?.errorMessage,
+    key: err?.response?.data?.key,
+  };
+}
+
 export function SIGNUP(body) {
-  return authService.post("/signup", body);
+  return authService.post("/signup", body).then(dealSuccess).catch(dealError);
 }
 
 export function LOGIN(body) {

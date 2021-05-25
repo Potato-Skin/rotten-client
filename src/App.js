@@ -1,49 +1,23 @@
 import React from "react";
+import { Switch } from "react-router-dom";
 import "./App.css";
-import { Switch, Route } from "react-router-dom";
-import HomePageComponent from "./pages/HomePage";
-import MoviesPage from "./pages/MoviesPage";
-import * as PATHS from "./utils/paths";
 import Navbar from "./components/Navbar/Navbar";
-import SingleMoviePage from "./pages/SingleMoviePage";
-import SignupPage from "./pages/SignupPage";
-import axios from "axios";
-import LoginPage from "./pages/Login.page";
-import ProfilePage from "./pages/ProfilePage";
-import ProtectedRoute from "./components/routing/ProtectedRoute";
 import NormalRoute from "./components/routing/NormalRoute";
+import ProtectedRoute from "./components/routing/ProtectedRoute";
+import HomePageComponent from "./pages/HomePage";
+import LoginPage from "./pages/Login.page";
+import MoviesPage from "./pages/MoviesPage";
+import ProfilePage from "./pages/ProfilePage";
+import SignupPage from "./pages/SignupPage";
+import SingleMoviePage from "./pages/SingleMoviePage";
 import * as AUTH_SERVICE from "./service/auth.service";
 import * as CONSTS from "./utils/consts";
-// because we need to get user data
-
-// fetch('http://locahost:5000/api', {
-//   headers
-// })
-
-// function DisplayUser(props) {
-//   return (
-//     <div>
-//       <h1>{props.name}</h1>
-//       <h2>{props.from}</h2>
-//       <h3>{props.inCountry}</h3>
-//     </div>
-//   );
-// }
-
-// function AnotherAppComponentJustToMakeExample() {
-//   const user = {
-//     name: "Khrys",
-//     from: "Ukraine",
-//     inCountry: "netherlands",
-//   };
-
-//   return <DisplayUser {...user} />;
-//   // return <DisplayUser name={user.name} from={user.from} inCountry={user.inCountry} />
-// }
+import * as PATHS from "./utils/paths";
 
 function App() {
   const [user, setUser] = React.useState(null);
   const [isCool, setIsCool] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const myAccessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
@@ -56,7 +30,14 @@ function App() {
       })
       .catch((err) => {
         console.error(err.response);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
+
+    if (false) {
+      setIsCool(true);
+    }
   }, []);
 
   function authenticate(user) {
@@ -68,6 +49,10 @@ function App() {
     setUser(null);
     localStorage.removeItem(CONSTS.ACCESS_TOKEN);
     return AUTH_SERVICE.LOGOUT(accessToken);
+  }
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
   }
 
   return (

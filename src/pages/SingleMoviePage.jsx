@@ -15,12 +15,12 @@ function SingleMoviePage(props) {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [props.match.params.movieId]);
 
   return (
     <div>
       <h2>{singleMovie.title}</h2>
-      <img src={singleMovie.coverPic} style={{ width: "300px" }} />
+      <img src={singleMovie.coverPic} style={{ width: "300px" }} alt="Dayman" />
     </div>
   );
 }

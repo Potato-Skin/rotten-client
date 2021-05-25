@@ -15,23 +15,32 @@ function SignupPage(props) {
     password: "",
     // fullName: "",
   });
+  const [error, setError] = React.useState(null);
 
   function onSubmit(event) {
     event.preventDefault();
-    AUTH_SERVICE.SIGNUP(form)
-      .then((response) => {
-        console.log("response:", response);
-        props.authenticate(response.data.user);
-        // dear localStorage with JSON. thanks
-        // dear json localStorage. thanks
-        // dear json localStorage = thanks(lift State up. and Status as well, why not?)
-        localStorage.setItem(CONSTS.ACCESS_TOKEN, response.data.accessToken);
-        // WE NEED TO MAKE SURE THE USER STAYS LOGGED IN. WE DONT HAVE COOKIES, BUT WE CAN USE ANOTHER KIND OF IN-BROWSER MEMORY
-        props.history.push(PATHS.HOME_PAGE);
-      })
-      .catch((err) => {
-        console.log("err:", err.response); // this is in axios errors
-      });
+    AUTH_SERVICE.SIGNUP(form).then((response) => {
+      if (!response.status) {
+        setError(response);
+        return;
+      }
+      props.authenticate(response.data.user);
+      // dear localStorage with JSON. thanks
+      // dear json localStorage. thanks
+      // dear json localStorage = thanks(lift State up. and Status as well, why not?)
+      localStorage.setItem(CONSTS.ACCESS_TOKEN, response.data.accessToken);
+      // WE NEED TO MAKE SURE THE USER STAYS LOGGED IN. WE DONT HAVE COOKIES, BUT WE CAN USE ANOTHER KIND OF IN-BROWSER MEMORY
+      props.history.push(PATHS.HOME_PAGE);
+    });
+    // .catch((err) => {
+    //   console.log("response was NOT SUCCESSFUL", err.response); // this is in axios errors
+    //   if (err?.response?.data?.errorMessage) {
+    //     setError({
+    //       message: err.response.data.errorMessage,
+    //       key: err.response.data.key,
+    //     });
+    //   }
+    // });
   }
 
   function handleChange(event) {
@@ -63,6 +72,9 @@ function SignupPage(props) {
             // onChange={event => setUsername(event.target.value)}
             value={form.username}
           />
+          {error?.key === "username" && (
+            <p className="errorMessage">{error.message}</p>
+          )}
         </div>
         <div>
           <label>Email</label>
@@ -76,8 +88,17 @@ function SignupPage(props) {
             onChange={handleChange}
             value={form.password}
           />
+          {error?.password === "password" && (
+            <p className="errorMessage">{error.message}</p>
+          )}
         </div>
         <button>Submit</button>
+        {/* {error && <p>{error}</p>} */}
+        {!error?.key && <p>{error?.message}</p>}
+        {/* {error ? <p>{error}</p> : null} */}
+        {error?.key === "email" && (
+          <p className="errorMessage">{error.message}</p>
+        )}
       </form>
     </div>
   );

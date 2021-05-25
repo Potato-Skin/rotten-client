@@ -23,7 +23,7 @@ export default function ProfilePage(props) {
       <img
         src={user.profilePic}
         width="200px"
-        alt={`Profile picture for ${user.username}`}
+        alt={`Profile  for ${user.username}`}
       />
       <div>
         <button onClick={profileToggle}>Update profile</button>

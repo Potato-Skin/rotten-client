@@ -76,7 +76,11 @@ function MoviesPage() {
           <section key={movie._id}>
             <Link to={`${PATHS.MOVIES_PAGE}/${movie._id}`}>
               <h2>{movie.title}</h2>
-              <img src={movie.coverPic} style={{ width: "300px" }} />
+              <img
+                src={movie.coverPic}
+                style={{ width: "300px" }}
+                alt="Rum ham"
+              />
             </Link>
           </section>
         );
