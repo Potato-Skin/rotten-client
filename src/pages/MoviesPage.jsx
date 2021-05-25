@@ -71,6 +71,7 @@ function MoviesPage() {
 
   return (
     <div>
+      <Link to={PATHS.ADD_MOVIES}>Add a movie</Link>
       {listOfMovies.map((movie) => {
         return (
           <section key={movie._id}>

@@ -10,6 +10,7 @@ import MoviesPage from "./pages/MoviesPage";
 import ProfilePage from "./pages/ProfilePage";
 import SignupPage from "./pages/SignupPage";
 import SingleMoviePage from "./pages/SingleMoviePage";
+import AddMoviePage from "./pages/AddMoviePage";
 import * as AUTH_SERVICE from "./service/auth.service";
 import * as CONSTS from "./utils/consts";
 import * as PATHS from "./utils/paths";
@@ -22,7 +23,7 @@ function App() {
   React.useEffect(() => {
     const myAccessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
     if (!myAccessToken) {
-      return;
+      return setIsLoading(false);
     }
     AUTH_SERVICE.GET_ME(myAccessToken)
       .then((response) => {
@@ -30,6 +31,7 @@ function App() {
       })
       .catch((err) => {
         console.error(err.response);
+        return;
       })
       .finally(() => {
         setIsLoading(false);
@@ -112,6 +114,12 @@ function App() {
         /> */}
 
         <NormalRoute exact path={PATHS.MOVIES_PAGE} component={MoviesPage} />
+        <ProtectedRoute
+          exact
+          path={PATHS.ADD_MOVIES}
+          component={AddMoviePage}
+          user={user}
+        />
         {/* <Route exact path={PATHS.MOVIES_PAGE} component={MoviesPage} /> */}
         {/* <Route exact path="/movies/add" component={AddMoviePage}/> */}
         <NormalRoute

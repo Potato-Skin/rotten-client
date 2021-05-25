@@ -2,6 +2,7 @@ import React from "react";
 import * as AUTH_SERVICE from "../service/auth.service";
 import * as CONSTS from "../utils/consts";
 import * as PATHS from "../utils/paths";
+import useForm from "../hooks/useForm";
 
 // GLOBAL STATE
 // React Context, Redux, Apollo (GraphQl)
@@ -9,43 +10,48 @@ import * as PATHS from "../utils/paths";
 // Local State
 
 function SignupPage(props) {
-  const [form, setForm] = React.useState({
+  const [form, handleChange, onSubmit] = useForm({
     username: "",
     email: "",
     password: "",
-    // fullName: "",
   });
+  // const [form, setForm] = React.useState({
+  //   username: "",
+  //   email: "",
+  //   password: "",
+  //   // fullName: "",
+  // });
   const [error, setError] = React.useState(null);
 
-  function onSubmit(event) {
-    event.preventDefault();
-    AUTH_SERVICE.SIGNUP(form).then((response) => {
-      if (!response.status) {
-        setError(response);
-        return;
-      }
-      props.authenticate(response.data.user);
-      // dear localStorage with JSON. thanks
-      // dear json localStorage. thanks
-      // dear json localStorage = thanks(lift State up. and Status as well, why not?)
-      localStorage.setItem(CONSTS.ACCESS_TOKEN, response.data.accessToken);
-      // WE NEED TO MAKE SURE THE USER STAYS LOGGED IN. WE DONT HAVE COOKIES, BUT WE CAN USE ANOTHER KIND OF IN-BROWSER MEMORY
-      props.history.push(PATHS.HOME_PAGE);
-    });
-    // .catch((err) => {
-    //   console.log("response was NOT SUCCESSFUL", err.response); // this is in axios errors
-    //   if (err?.response?.data?.errorMessage) {
-    //     setError({
-    //       message: err.response.data.errorMessage,
-    //       key: err.response.data.key,
-    //     });
-    //   }
-    // });
-  }
+  // function onSubmit(event) {
+  //   event.preventDefault();
+  //   AUTH_SERVICE.SIGNUP(form).then((response) => {
+  //     if (!response.status) {
+  //       setError(response);
+  //       return;
+  //     }
+  //     props.authenticate(response.data.user);
+  //     // dear localStorage with JSON. thanks
+  //     // dear json localStorage. thanks
+  //     // dear json localStorage = thanks(lift State up. and Status as well, why not?)
+  //     localStorage.setItem(CONSTS.ACCESS_TOKEN, response.data.accessToken);
+  //     // WE NEED TO MAKE SURE THE USER STAYS LOGGED IN. WE DONT HAVE COOKIES, BUT WE CAN USE ANOTHER KIND OF IN-BROWSER MEMORY
+  //     props.history.push(PATHS.HOME_PAGE);
+  //   });
+  //   // .catch((err) => {
+  //   //   console.log("response was NOT SUCCESSFUL", err.response); // this is in axios errors
+  //   //   if (err?.response?.data?.errorMessage) {
+  //   //     setError({
+  //   //       message: err.response.data.errorMessage,
+  //   //       key: err.response.data.key,
+  //   //     });
+  //   //   }
+  //   // });
+  // }
 
-  function handleChange(event) {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  }
+  // function handleChange(event) {
+  //   setForm({ ...form, [event.target.name]: event.target.value });
+  // }
 
   return (
     <div>
