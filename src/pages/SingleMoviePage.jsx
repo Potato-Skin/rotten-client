@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPlayer from "react-player/youtube";
-import AddMovieForm from "../components/Movies/AddMovie";
+import AddMovieReview from "../components/Movies/AddMovieReview";
 
 function SingleMoviePage(props) {
   console.log("props:", props);
@@ -39,7 +39,7 @@ function SingleMoviePage(props) {
         Add a review
       </button>
       {addReview && (
-        <AddMovieForm movieId={singleMovie._id} updatesMovie={updatesMovie} />
+        <AddMovieReview movieId={singleMovie._id} updatesMovie={updatesMovie} />
       )}
       <div>
         {singleMovie?.reviews?.map((e) => (

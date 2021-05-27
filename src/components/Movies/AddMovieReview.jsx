@@ -3,7 +3,7 @@ import React from "react";
 import useForm from "../../hooks/useForm";
 import * as CONSTS from "../../utils/consts";
 
-function AddMovie(props) {
+function AddMovieReview(props) {
   const [form, handleChange, handleSubmit] = useForm({ title: "", body: "" });
 
   const onSubmit = handleSubmit((formValues) => {
@@ -55,7 +55,7 @@ function AddMovie(props) {
   );
 }
 
-export default AddMovie;
+export default AddMovieReview;
 
 // function useForm(formObj) {
 //   const [form, setForm] = React.useState(formObj);
