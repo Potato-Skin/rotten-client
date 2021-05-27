@@ -1,23 +1,37 @@
+import axios from "axios";
 import React from "react";
 import useForm from "../../hooks/useForm";
+import * as CONSTS from "../../utils/consts";
 
-function AddMovie() {
+function AddMovie(props) {
   const [form, handleChange, handleSubmit] = useForm({ title: "", body: "" });
-  //   const [form, setForm] = React.useState({
-  //     title: "",
-  //     body: "",
-  //   });
 
-  //   function handleChange(e) {
-  //     setForm({ ...form, [e.target.name]: e.target.value });
-  //   }
-
-  //   function handleSubmit(e) {
-  //     e.preventDefault();
-  //   }
+  const onSubmit = handleSubmit((formValues) => {
+    console.log("formValues:", formValues);
+    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
+    console.log("accessToken:", accessToken);
+    axios
+      .post(
+        `http://localhost:5000/api/movies/${props.movieId}/add-review`,
+        formValues,
+        {
+          headers: {
+            authorization: accessToken,
+          },
+        }
+      )
+      .then((success) => {
+        console.log("success:", success);
+        props.updatesMovie(success.data.movie);
+      })
+      .catch((err) => {
+        console.log("HERE?");
+        console.error(err.response);
+      });
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <div>
         <label>Title</label>
         <input

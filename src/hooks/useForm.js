@@ -7,8 +7,12 @@ export default function useForm(formObj) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  // fn -> stands for function. We cant write function, because its a reserved keyword
+  function handleSubmit(fn) {
+    return (event) => {
+      event.preventDefault();
+      fn(form);
+    };
   }
 
   return [form, handleChange, handleSubmit];

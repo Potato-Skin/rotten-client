@@ -8,6 +8,10 @@ function SingleMoviePage(props) {
   const [singleMovie, setSingleMovie] = useState({});
   const [addReview, setAddReview] = useState(false);
 
+  function updatesMovie(movie) {
+    setSingleMovie(movie);
+  }
+
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/movies/${props.match.params.movieId}`)
@@ -34,7 +38,15 @@ function SingleMoviePage(props) {
       <button onClick={() => setAddReview((currentValue) => !currentValue)}>
         Add a review
       </button>
-      {addReview && <AddMovieForm />}
+      {addReview && (
+        <AddMovieForm movieId={singleMovie._id} updatesMovie={updatesMovie} />
+      )}
+      <div>
+        {singleMovie?.reviews?.map((e) => (
+          <div>{e.title}</div>
+        ))}
+      </div>
+      <h1>ALL THE WORDS</h1>
     </div>
   );
 }
