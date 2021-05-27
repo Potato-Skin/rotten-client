@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPlayer from "react-player/youtube";
 import AddMovieReview from "../components/Movies/AddMovieReview";
+import AddMovieRating from "../components/Movies/AddRatingReview";
 
 function SingleMoviePage(props) {
   console.log("props:", props);

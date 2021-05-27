@@ -10,7 +10,7 @@ import useForm from "../hooks/useForm";
 // Local State
 
 function SignupPage(props) {
-  const [form, handleChange, onSubmit] = useForm({
+  const [form, handleChange, handleSubmit] = useForm({
     username: "",
     email: "",
     password: "",
@@ -53,6 +53,22 @@ function SignupPage(props) {
   //   setForm({ ...form, [event.target.name]: event.target.value });
   // }
 
+  const onSubmit = handleSubmit((formValues) => {
+    AUTH_SERVICE.SIGNUP(formValues).then((response) => {
+      if (!response.status) {
+        setError(response);
+        return;
+      }
+      props.authenticate(response.data.user);
+      // dear localStorage with JSON. thanks
+      // dear json localStorage. thanks
+      // dear json localStorage = thanks(lift State up. and Status as well, why not?)
+      localStorage.setItem(CONSTS.ACCESS_TOKEN, response.data.accessToken);
+      // WE NEED TO MAKE SURE THE USER STAYS LOGGED IN. WE DONT HAVE COOKIES, BUT WE CAN USE ANOTHER KIND OF IN-BROWSER MEMORY
+      props.history.push(PATHS.HOME_PAGE);
+    });
+  });
+
   return (
     <div>
       <h1>
@@ -68,6 +84,14 @@ function SignupPage(props) {
             // onChange={event => setUsername(event.target.value)}
             value={form.fullName}
           />
+
+ℹ  DONE  JSON Project bootstrapped successfully.
+
+You can now cd ./new-app
+
+
+/tmp took 58s
+❯
         </div> */}
         <div>
           <label>Username</label>
