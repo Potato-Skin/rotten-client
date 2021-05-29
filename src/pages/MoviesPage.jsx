@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import * as PATHS from "../utils/paths";
+import * as CONSTS from "../utils/consts";
 // class MoviesPage extends React.Component {
 //   state = {
 //     counter: 1,
@@ -54,7 +55,7 @@ function MoviesPage() {
     console.log("WE CAN RUN SOME CODE HERE, COMPONENT WAS `mounted`");
     // WHEN THE COMPONENTS, we will do an API call to get data that, at WRITE time, we dont have access to
     axios
-      .get(`http://localhost:5000/api/movies`)
+      .get(`${CONSTS.SERVER_URL}/movies`)
       .then((response) => {
         console.log("response:", response);
         setListOfMovies(response.data);

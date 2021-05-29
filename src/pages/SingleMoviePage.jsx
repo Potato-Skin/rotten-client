@@ -3,6 +3,7 @@ import axios from "axios";
 import ReactPlayer from "react-player/youtube";
 import AddMovieReview from "../components/Movies/AddMovieReview";
 import AddMovieRating from "../components/Movies/AddMovieRating";
+import * as CONSTS from "../utils/consts";
 
 function SingleMoviePage(props) {
   console.log("props:", props);
@@ -16,7 +17,7 @@ function SingleMoviePage(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/movies/${props.match.params.movieId}`)
+      .get(`${CONSTS.SERVER_URL}/movies/${props.match.params.movieId}`)
       .then((response) => {
         console.log("response:", response);
         setSingleMovie(response.data);

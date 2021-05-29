@@ -14,7 +14,7 @@ function AddMovieRating(props) {
 
     axios
       .post(
-        `http://localhost:5000/api/movies/${props.movieId}/add-rating`,
+        `${CONSTS.SERVER_URL}/movies/${props.movieId}/add-rating`,
         givenRating,
         {
           headers: {

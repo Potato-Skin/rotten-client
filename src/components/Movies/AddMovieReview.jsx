@@ -12,7 +12,7 @@ function AddMovieReview(props) {
     console.log("accessToken:", accessToken);
     axios
       .post(
-        `http://localhost:5000/api/movies/${props.movieId}/add-review`,
+        `${CONSTS.SERVER_URL}/movies/${props.movieId}/add-review`,
         formValues,
         {
           headers: {
