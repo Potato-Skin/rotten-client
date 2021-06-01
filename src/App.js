@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Switch } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -14,111 +14,64 @@ import AddMoviePage from "./pages/AddMoviePage";
 import * as AUTH_SERVICE from "./service/auth.service";
 import * as CONSTS from "./utils/consts";
 import * as PATHS from "./utils/paths";
+import SingleUserPage from "./pages/SingleUserPage";
+import UltraProtectedNoOneCanSee from "./pages/UltraProtectedNoOneCanSee";
+import AdminRoute from "./components/routing/AdminRoute";
+import UserWrapper from "./context/User.context";
+import InboxPage from "./pages/InboxPage";
+import axios from "axios";
 
 function App() {
-  const [user, setUser] = React.useState(null);
-  const [isCool, setIsCool] = React.useState(true);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
+  const [conversations, setConversations] = useState([]);
+  function getConversations() {
     const myAccessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
     if (!myAccessToken) {
-      return setIsLoading(false);
+      return;
     }
-    AUTH_SERVICE.GET_ME(myAccessToken)
+    axios
+      .get(`${CONSTS.SERVER_URL}/conversations`, {
+        headers: { authorization: myAccessToken },
+      })
       .then((response) => {
-        setUser(response.data);
-      })
-      .catch((err) => {
-        console.error(err.response);
-        return;
-      })
-      .finally(() => {
-        setIsLoading(false);
+        // console.log("response:", response);
+        setConversations(response.data);
       });
+  }
 
-    if (false) {
-      setIsCool(true);
-    }
+  React.useEffect(() => {
+    let conversationTimer = setInterval(() => {
+      getConversations();
+    }, 5000);
+
+    return () => clearInterval(conversationTimer);
   }, []);
 
-  function authenticate(user) {
-    setUser(user);
-  }
-
-  function logout() {
-    const accessToken = localStorage.getItem(CONSTS.ACCESS_TOKEN);
-    setUser(null);
-    localStorage.removeItem(CONSTS.ACCESS_TOKEN);
-    return AUTH_SERVICE.LOGOUT(accessToken);
-  }
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
   return (
-    <div>
-      <Navbar user={user} logout={logout} />
+    <UserWrapper>
+      <Navbar conversations={conversations} />
       <Switch>
-        {/* <Route exact path={PATHS.HOME_PAGE} component={HomePageComponent} /> */}
         <NormalRoute
           exact
           path={PATHS.HOME_PAGE}
           component={HomePageComponent}
         />
-        {/* <Route
-          exact
-          path={PATHS.HOME_PAGE}
-          render={(reactRouterProps) => (
-            <HomePageComponent {...reactRouterProps} />
-          )}
-        /> */}
 
-        <NormalRoute
-          exact
-          path={PATHS.LOGIN_PAGE}
-          authenticate={authenticate}
-          component={LoginPage}
-        />
+        <NormalRoute exact path={PATHS.LOGIN_PAGE} component={LoginPage} />
 
-        <NormalRoute
-          exact
-          path={PATHS.SIGNUP_PAGE}
-          authenticate={authenticate}
-          component={SignupPage}
-        />
+        <NormalRoute exact path={PATHS.SIGNUP_PAGE} component={SignupPage} />
 
         <ProtectedRoute
-          // exact={true}
           exact
           path={PATHS.PROFILE_PAGE}
           component={ProfilePage}
-          user={user}
-          isCool={isCool}
           friendName="Tadej"
-          authenticate={authenticate}
         />
-
-        {/* <Route
-          exact
-          path={PATHS.PROFILE_PAGE}
-          render={(reactRouterProps) => (
-            <ProfilePage
-              {...reactRouterProps}
-              user={user}
-              isCool={false}
-              friendsName="Tadej"
-            />
-          )}
-        /> */}
 
         <NormalRoute exact path={PATHS.MOVIES_PAGE} component={MoviesPage} />
         <ProtectedRoute
           exact
           path={PATHS.ADD_MOVIES}
           component={AddMoviePage}
-          user={user}
         />
         {/* <Route exact path={PATHS.MOVIES_PAGE} component={MoviesPage} /> */}
         {/* <Route exact path="/movies/add" component={AddMoviePage}/> */}
@@ -129,9 +82,19 @@ function App() {
         />
         {/* <Route exact path={PATHS.SINGLE_MOVIE} component={SingleMoviePage} /> */}
         {/* <Route exact path="movies/:movieId/edit" component={EditSinglePage}/> */}
-        {/* <Route exact path="/:username" component={SingleUserPage}/> */}
+        <AdminRoute
+          exact
+          path={PATHS.SUPER_IMPORTANT}
+          component={UltraProtectedNoOneCanSee}
+        />
+        <ProtectedRoute exact path={PATHS.MESSAGES} component={InboxPage} />
+        <NormalRoute
+          exact
+          path={PATHS.SINGLE_USER}
+          component={SingleUserPage}
+        />
       </Switch>
-    </div>
+    </UserWrapper>
   );
 }
 

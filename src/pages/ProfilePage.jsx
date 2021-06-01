@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import UpdatePassword from "../components/Profile/UpdatePassword";
 import UpdateProfile from "../components/Profile/UpdateProfile";
+import { UserContext, useUser } from "../context/User.context";
 
-export default function ProfilePage(props) {
+export default function ProfilePage() {
   const [displayUpdateProfile, setDisplayUpdateProfile] = useState(false);
   const [displayUpdatePassword, setDisplayUpdatePassword] = useState(false);
-  const { user, authenticate } = props;
+  const { user, authenticate } = useUser();
 
   function profileToggle() {
     setDisplayUpdateProfile(!displayUpdateProfile);
